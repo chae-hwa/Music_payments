@@ -5,7 +5,7 @@ import com.ll.com.music_payments.app.song.service.SongService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 
-public class TestDevInitData implements InitDataBefore{
+public class TestInitData implements InitDataBefore{
 
     @Bean
     CommandLineRunner initDate(
