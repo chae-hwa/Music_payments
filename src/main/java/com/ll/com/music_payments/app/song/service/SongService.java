@@ -42,4 +42,20 @@ public class SongService {
         song.setSubject(subject);
         song.setContent(content);
     }
+
+    public boolean authorCanModify(Member author, Song song) {
+        return author.getId().equals(song.getAuthor().getId());
+    }
+
+    public boolean authorCanDelete(Member author, Song song) {
+        return authorCanModify(author, song);
+    }
+
+    public Optional<Song> findForPrintById(long id) {
+        Optional<Song> opSong = findById(id);
+
+        if(opSong.isEmpty()) return opSong;
+
+        return opSong;
+    }
 }

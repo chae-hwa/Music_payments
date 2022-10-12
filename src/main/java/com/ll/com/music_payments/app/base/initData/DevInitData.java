@@ -12,7 +12,10 @@ import org.springframework.context.annotation.Profile;
 public class DevInitData implements InitDataBefore {
 
     @Bean
-    CommandLineRunner initDate(MemberService memberService, SongService songService) {
+    CommandLineRunner initDate(
+            MemberService memberService,
+            SongService songService
+    ) {
         return args -> {
             before(memberService, songService);
         };

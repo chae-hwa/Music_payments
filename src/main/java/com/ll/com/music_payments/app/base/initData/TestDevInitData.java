@@ -8,7 +8,10 @@ import org.springframework.context.annotation.Bean;
 public class TestDevInitData implements InitDataBefore{
 
     @Bean
-    CommandLineRunner initDate(MemberService memberService, SongService songService) {
+    CommandLineRunner initDate(
+            MemberService memberService,
+            SongService songService
+    ) {
         return args -> {
             before(memberService, songService);
         };
