@@ -92,7 +92,7 @@ public class SongController {
 
         Member author = memberContext.getMember();
 
-        if(songService.authorCanModify(author, song) ) {
+        if(songService.authorCanModify(author, song) == false) {
             throw new ActorCanNotSeeException();
         }
 
