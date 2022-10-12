@@ -2,12 +2,16 @@ package com.ll.com.music_payments.service;
 
 import com.ll.com.music_payments.app.member.entity.Member;
 import com.ll.com.music_payments.app.member.repository.MemberRepository;
+import com.ll.com.music_payments.app.song.entity.Song;
+import com.ll.com.music_payments.app.song.service.SongService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
