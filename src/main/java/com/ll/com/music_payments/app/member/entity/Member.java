@@ -25,6 +25,8 @@ public class Member extends BaseEntity {
     private String email;
     private boolean emailVerified;
 
+    private long restCash; // 보유한 캐시 금액
+
     public String getName() {
         return username;
     }
