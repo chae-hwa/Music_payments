@@ -42,7 +42,7 @@ public class MemberService {
     }
 
     @Transactional
-    public long addCash(Member member, int price, String eventType) {
+    public long addCash(Member member, long price, String eventType) {
 
         CashLog cashLog = cashService.addCash(member, price, eventType);
 
