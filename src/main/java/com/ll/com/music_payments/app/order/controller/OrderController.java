@@ -8,6 +8,7 @@ import com.ll.com.music_payments.app.order.exception.AuthorCanNotSeeOrderExcepti
 import com.ll.com.music_payments.app.order.exception.OrderIdNotMatchedException;
 import com.ll.com.music_payments.app.order.service.OrderService;
 import com.ll.com.music_payments.security.dto.MemberContext;
+import com.ll.com.music_payments.util.Ut;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
@@ -68,7 +69,6 @@ public class OrderController {
             }
         });
     }
-
     private final String SECRET_KEY = "test_sk_Lex6BJGQOVDBRnp2YOO8W4w2zNbg";
 
     @RequestMapping("/{id}/success")
@@ -82,7 +82,7 @@ public class OrderController {
 
         Order order = orderService.findForPrintById(id).get();
 
-        long orderIdInputed = Long.parseLong(orderId.split("__")[1]); // orderId _기준으로 나누기
+        long orderIdInputed = Long.parseLong(orderId.split("__")[1]);
 
         if ( id != orderIdInputed ) {
             throw new OrderIdNotMatchedException();
@@ -95,7 +95,7 @@ public class OrderController {
 
         Map<String, String> payloadMap = new HashMap<>();
         payloadMap.put("orderId", orderId);
-        payloadMap.put("amount", String.valueOf(amount));
+        payloadMap.put("amount", String.valueOf(order.calculatePayPrice()));
 
         HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(payloadMap), headers);
 
@@ -103,10 +103,10 @@ public class OrderController {
                 "https://api.tosspayments.com/v1/payments/" + paymentKey, request, JsonNode.class);
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            JsonNode successNode = responseEntity.getBody();
-            model.addAttribute("orderId", successNode.get("orderId").asText());
-            String secret = successNode.get("secret").asText(); // 가상계좌의 경우 입금 callback 검증을 위해서 secret을 저장하기를 권장함
-            return "order/success";
+
+            orderService.payByTossPayments(order);
+
+            return "redirect:/order/%d?msg=%s".formatted(order.getId(), Ut.url.encode("결제가 완료되었습니다."));
         } else {
             JsonNode failNode = responseEntity.getBody();
             model.addAttribute("message", failNode.get("message").asText());
@@ -121,6 +121,5 @@ public class OrderController {
         model.addAttribute("code", code);
         return "order/fail";
     }
-
     // 토스 페이먼츠 백엔드 코드 끝
 }

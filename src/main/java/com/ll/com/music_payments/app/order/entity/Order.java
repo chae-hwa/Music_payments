@@ -27,6 +27,12 @@ public class Order extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Member buyer;
 
+    private String name;
+
+    private boolean isPaid; // 결제 여부
+    private boolean isCanceled; // 취소 여부
+    private boolean isRefunded; // 환불 여부
+
     @Builder.Default
     @OneToMany(mappedBy = "order", cascade = ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
@@ -74,13 +80,13 @@ public class Order extends BaseEntity {
     }
 
     // 주문 이름 가져오기
-    public String getName() {
+    public void makeName() {
         String name = orderItems.get(0).getProduct().getSubject();
 
         if ( orderItems.size() > 1 ) {
             name += " 외 %d곡".formatted(orderItems.size() - 1);
         }
 
-        return name;
+        this.name = name;
     }
 }

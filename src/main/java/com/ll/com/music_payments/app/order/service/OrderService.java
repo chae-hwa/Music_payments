@@ -62,6 +62,9 @@ public class OrderService {
             order.addOrderItem(orderItem);
         }
 
+        // 주문 품목으로부터 이름을 만든다.
+        order.makeName();
+
         orderRepository.save(order);
 
         return order;
@@ -109,5 +112,18 @@ public class OrderService {
     public boolean authorCanSee(Member author, Order order) {
 
         return author.getId().equals(order.getBuyer().getId());
+    }
+
+    @Transactional
+    public void payByTossPayments(Order order) {
+        Member buyer = order.getBuyer();
+        int payPrice = order.calculatePayPrice();
+
+        // 충전했다가 결제하는 이유는 예치금에 편입시키기 위해
+        memberService.addCash(buyer, payPrice, "주문결제충전__토스페이먼츠");
+        memberService.addCash(buyer, payPrice * -1, "주문결제__토스페이먼츠");
+
+        order.setPaymentDone();
+        orderRepository.save(order);
     }
 }
