@@ -29,7 +29,7 @@ public class ProductServiceTests {
     void t1() {
         Song song = songService.findById(1).get();
 
-        Product product = productService.create(song, "그리뭄", 1_900);
+        Product product = productService.create(song, "그리움", 1_900);
 
         assertThat(product).isNotNull();
         assertThat(product.getSubject()).isEqualTo("그리움");
