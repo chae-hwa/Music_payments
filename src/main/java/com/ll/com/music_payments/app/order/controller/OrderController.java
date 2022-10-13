@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.com.music_payments.app.member.entity.Member;
 import com.ll.com.music_payments.app.member.service.MemberService;
 import com.ll.com.music_payments.app.order.entity.Order;
+import com.ll.com.music_payments.app.order.exception.AuthorCanNotPayOrderException;
 import com.ll.com.music_payments.app.order.exception.AuthorCanNotSeeOrderException;
 import com.ll.com.music_payments.app.order.exception.OrderIdNotMatchedException;
 import com.ll.com.music_payments.app.order.service.OrderService;
@@ -17,11 +18,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.ResponseErrorHandler;
 
 import javax.annotation.PostConstruct;
@@ -60,6 +58,27 @@ public class OrderController {
 
         return "order/detail";
     }
+
+    // 예치금 사용 후 결제하기 눌렀을 때 이동할 페이지
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{id}/payByRestCashOnly")
+    public String payByRestCashOnly(@AuthenticationPrincipal MemberContext memberContext, @PathVariable long id) {
+        Order order = orderService.findForPrintById(id).get();
+
+        Member author = memberContext.getMember();
+
+        long restCash = memberService.getRestCash(author);
+
+        if( orderService.authorCanPayment(author, order) == false) {
+            throw new AuthorCanNotPayOrderException();
+        }
+
+        orderService.payByRestCashOnly(order);
+
+        return "redirect:/order/%d?msg=%s".formatted(order.getId(), Ut.url.encode("예치금으로 결제했습니다."));
+
+    }
+
 
     // 토스 페이먼츠 백엔드 코드 시작
     @PostConstruct

@@ -126,4 +126,8 @@ public class OrderService {
         order.setPaymentDone();
         orderRepository.save(order);
     }
+
+    public boolean authorCanPayment(Member author, Order order) {
+        return authorCanSee(author, order);
+    }
 }
