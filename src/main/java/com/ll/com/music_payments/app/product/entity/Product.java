@@ -28,4 +28,8 @@ public class Product extends BaseEntity {
 
     private String subject;
     private int price;
+
+    public boolean isOrderable() {
+        return true;
+    }
 }

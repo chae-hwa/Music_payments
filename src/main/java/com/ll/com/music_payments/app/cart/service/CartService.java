@@ -3,10 +3,13 @@ package com.ll.com.music_payments.app.cart.service;
 import com.ll.com.music_payments.app.cart.entity.CartItem;
 import com.ll.com.music_payments.app.cart.repository.CartItemRepository;
 import com.ll.com.music_payments.app.member.entity.Member;
+import com.ll.com.music_payments.app.order.entity.OrderItem;
 import com.ll.com.music_payments.app.product.entity.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,4 +49,22 @@ public class CartService {
     public boolean hasItem(Member buyer, Product product) {
         return cartItemRepository.existsByBuyerIdAndProductId(buyer.getId(), product.getId());
     }
+
+    public List<CartItem> getItemsByBuyer(Member buyer) {
+        return cartItemRepository.findAllByBuyerId(buyer.getId());
+    }
+
+    @Transactional
+    public void removeItem(CartItem cartItem) {
+        cartItemRepository.delete(cartItem);
+    }
+
+    /*
+    @Transactional
+    public void removeItem(Member buyer, Long productId) {
+
+        Product product = new Product(productId);
+        removeItem(buyer, product);
+    }
+    */
 }
