@@ -2,13 +2,16 @@ package com.ll.com.music_payments.app.base.initData;
 
 import com.ll.com.music_payments.app.member.entity.Member;
 import com.ll.com.music_payments.app.member.service.MemberService;
+import com.ll.com.music_payments.app.product.entity.Product;
+import com.ll.com.music_payments.app.product.service.ProductService;
 import com.ll.com.music_payments.app.song.entity.Song;
 import com.ll.com.music_payments.app.song.service.SongService;
 
 public interface InitDataBefore {
     default void before(
             MemberService memberService,
-            SongService songService
+            SongService songService,
+            ProductService productService
     ) {
 
         Member member1 = memberService.join("user1", "1234", "user1@test.com");
@@ -22,6 +25,12 @@ public interface InitDataBefore {
         Song song6 = songService.create(member1, "노래 6", "내용 6");
         Song song7 = songService.create(member2, "노래 7", "내용 7");
         Song song8 = songService.create(member2, "노래 8", "내용 8");
+
+        Product product1 = productService.create(song1, "그리움", 1_900);
+        Product product2 = productService.create(song3, "미련", 2_900);
+        Product product3 = productService.create(song5, "슬픔", 3_900);
+        Product product4 = productService.create(song7, "바다", 4_900);
+        Product product5 = productService.create(song8, "안녕", 5_900);
 
     }
 }

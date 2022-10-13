@@ -1,5 +1,7 @@
 package com.ll.com.music_payments.service;
 
+import com.ll.com.music_payments.app.product.entity.Product;
+import com.ll.com.music_payments.app.product.service.ProductService;
 import com.ll.com.music_payments.app.song.entity.Song;
 import com.ll.com.music_payments.app.song.service.SongService;
 import org.junit.jupiter.api.DisplayName;
@@ -37,9 +39,9 @@ public class ProductServiceTests {
     @Test
     @DisplayName("상품 수정")
     void t2() {
-        Product product1 = songService.findById(1).get();
+        Product product1 = productService.findById(1).get();
 
-        productService.modify(product, "깊은 그리움", 3_200);
+        productService.modify(product1, "깊은 그리움", 3_200);
 
         assertThat(product1).isNotNull();
         assertThat(product1.getSubject()).isEqualTo("깉은 그리움");
