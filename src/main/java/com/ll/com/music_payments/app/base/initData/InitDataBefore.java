@@ -1,5 +1,7 @@
 package com.ll.com.music_payments.app.base.initData;
 
+import com.ll.com.music_payments.app.cart.entity.CartItem;
+import com.ll.com.music_payments.app.cart.service.CartService;
 import com.ll.com.music_payments.app.member.entity.Member;
 import com.ll.com.music_payments.app.member.service.MemberService;
 import com.ll.com.music_payments.app.product.entity.Product;
@@ -11,7 +13,8 @@ public interface InitDataBefore {
     default void before(
             MemberService memberService,
             SongService songService,
-            ProductService productService
+            ProductService productService,
+            CartService cartService
     ) {
 
         Member member1 = memberService.join("user1", "1234", "user1@test.com");
@@ -31,6 +34,11 @@ public interface InitDataBefore {
         Product product3 = productService.create(song5, "슬픔", 3_900);
         Product product4 = productService.create(song7, "바다", 4_900);
         Product product5 = productService.create(song8, "안녕", 5_900);
+
+        CartItem cartItem1 = cartService.addItem(member1, product1);
+        CartItem cartItem2 = cartService.addItem(member1, product2);
+        CartItem cartItem3 = cartService.addItem(member2, product3);
+        CartItem cartItem4 = cartService.addItem(member2, product4);
 
     }
 }

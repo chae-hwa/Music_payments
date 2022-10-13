@@ -1,5 +1,7 @@
 package com.ll.com.music_payments.service;
 
+import com.ll.com.music_payments.app.cart.entity.CartItem;
+import com.ll.com.music_payments.app.cart.service.CartService;
 import com.ll.com.music_payments.app.member.entity.Member;
 import com.ll.com.music_payments.app.member.repository.MemberRepository;
 import com.ll.com.music_payments.app.product.entity.Product;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +20,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @ActiveProfiles("test")
 public class CartServiceTests {
-
     @Autowired
     private SongService songService;
 
@@ -54,6 +56,7 @@ public class CartServiceTests {
 
     @Test
     @DisplayName("장바구니에서 제거")
+    @Rollback(value = false)
     void t2() {
 
         Member buyer1 = memberRepository.findByUsername("user1").get();
@@ -70,8 +73,8 @@ public class CartServiceTests {
         cartService.removeItem(buyer2, product4);
 
         assertThat(cartService.hasItem(buyer1, product1)).isFalse();
-        assertThat(cartService.hasItem(buyer1, product2)).isFalse();
-        assertThat(cartService.hasItem(buyer2, product3)).isFalse();
-        assertThat(cartService.hasItem(buyer2, product4)).isFalse();
+        assertThat(cartService.hasItem(buyer1, product1)).isFalse();
+        assertThat(cartService.hasItem(buyer1, product1)).isFalse();
+        assertThat(cartService.hasItem(buyer1, product1)).isFalse();
     }
 }
