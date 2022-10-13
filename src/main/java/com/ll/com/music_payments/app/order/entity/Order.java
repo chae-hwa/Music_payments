@@ -89,4 +89,11 @@ public class Order extends BaseEntity {
 
         this.name = name;
     }
+
+    public boolean isPayable() { // 주문 가능한가?
+        if( isPaid ) return false; // 결제했으면 X
+        if( isCanceled ) return false; // 취소했으면 X
+
+        return true;
+     }
 }

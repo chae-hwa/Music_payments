@@ -3,6 +3,7 @@ package com.ll.com.music_payments.app.order.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.com.music_payments.app.member.entity.Member;
+import com.ll.com.music_payments.app.member.service.MemberService;
 import com.ll.com.music_payments.app.order.entity.Order;
 import com.ll.com.music_payments.app.order.exception.AuthorCanNotSeeOrderException;
 import com.ll.com.music_payments.app.order.exception.OrderIdNotMatchedException;
@@ -34,9 +35,11 @@ import java.util.Map;
 public class OrderController {
 
     private final OrderService orderService;
+    private final MemberService memberService;
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper;
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
@@ -46,11 +49,14 @@ public class OrderController {
 
         Member author = memberContext.getMember();
 
+        long restCash = memberService.getRestCash(author);
+
         if( orderService.authorCanSee(author, order) == false ){
             throw new AuthorCanNotSeeOrderException();
         }
 
         model.addAttribute("order", order);
+        model.addAttribute("authorRestCash", restCash);
 
         return "order/detail";
     }
