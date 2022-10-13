@@ -23,6 +23,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findByUsername(username).get();
 
         List<GrantedAuthority> authorities = new ArrayList<>();
+
+        // member의 이름이 user1이면 admin 권한 부여 → user1은 member, admin 권한이 2개다.
+        if(member.getUsername().equals("user1")) {
+            authorities.add(new SimpleGrantedAuthority("ADMIN"));
+        }
+
         authorities.add(new SimpleGrantedAuthority("MEMBER"));
 
         return new MemberContext(member, authorities);
