@@ -7,6 +7,35 @@
 
 <body>
 <main layout:fragment="main">
+    <!-- 토스 페이먼츠 스크립트 시작 -->
+    <script src="https://js.tosspayments.com/v1"></script>
+
+    <script th:inline="javascript">
+        const orderId = /*[[ ${order.id} ]]*/ null;
+        const buyerName = /*[[ ${order.buyer.name} ]]*/ null;
+        const orderName = /*[[ ${order.name} ]]*/ null;
+        const orderPayPrice = /*[[ ${order.calculatePayPrice} ]]*/ null;
+    </script>
+
+    <script>
+        const tossPayments = TossPayments("test_ck_GKNbdOvk5rkZBxzAldAVn07xlzmj");
+
+        function payment() {
+            const method = "카드"; // "카드" 혹은 "가상계좌"
+
+            const paymentData = {
+                amount: orderPayPrice,
+                orderId: "order__" + orderId,
+                orderName,
+                customerName: buyerName,
+                successUrl: window.location.origin + "/success",
+                failUrl: window.location.origin + "/fail",
+            };
+
+            tossPayments.requestPayment(method, paymentData);
+        }
+    </script>
+    <!-- 토스 페이먼츠 스크립트 끝 -->
     <section class="section section-write container mx-auto">
 
         <div class="px-2 pt-4">
@@ -38,10 +67,14 @@
                         </div>
                     </div>
                 </div>
+
+                <div>
+                    <button onclick="payment();" class="btn btn-sm btn-primary">카드결제</button>
+                </div>
+
             </div>
         </div>
     </section>
-
 </main>
 </body>
 </html>
