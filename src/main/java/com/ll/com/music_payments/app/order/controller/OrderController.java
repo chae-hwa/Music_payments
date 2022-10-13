@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.com.music_payments.app.member.entity.Member;
 import com.ll.com.music_payments.app.order.entity.Order;
 import com.ll.com.music_payments.app.order.exception.AuthorCanNotSeeOrderException;
+import com.ll.com.music_payments.app.order.exception.OrderIdNotMatchedException;
 import com.ll.com.music_payments.app.order.service.OrderService;
 import com.ll.com.music_payments.security.dto.MemberContext;
 import lombok.RequiredArgsConstructor;
@@ -72,8 +73,20 @@ public class OrderController {
 
     @RequestMapping("/{id}/success")
     public String confirmPayment(
-            @RequestParam String paymentKey, @RequestParam String orderId, @RequestParam Long amount,
-            Model model) throws Exception {
+            @PathVariable long id,
+            @RequestParam String paymentKey,
+            @RequestParam String orderId,
+            @RequestParam Long amount,
+            Model model
+    ) throws Exception {
+
+        Order order = orderService.findForPrintById(id).get();
+
+        long orderIdInputed = Long.parseLong(orderId.split("__")[1]); // orderId _기준으로 나누기
+
+        if ( id != orderIdInputed ) {
+            throw new OrderIdNotMatchedException();
+        }
 
         HttpHeaders headers = new HttpHeaders();
         // headers.setBasicAuth(SECRET_KEY, ""); // spring framework 5.2 이상 버전에서 지원
