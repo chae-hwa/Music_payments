@@ -21,8 +21,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class OrderService {
-    
-    
+
+
     private final OrderRepository orderRepository;
     private final CartService cartService;
     private final MemberService memberService;
@@ -35,7 +35,7 @@ public class OrderService {
 
         // buyer가 담은 장바구니 아이템 가져오기
         List<CartItem> cartItems = cartService.getItemsByBuyer(buyer);
-        
+
         List<OrderItem> orderItems = new ArrayList<>();
 
         for( CartItem cartItem : cartItems ) {
@@ -57,6 +57,10 @@ public class OrderService {
         Order order = Order.builder()
                 .buyer(buyer)
                 .build();
+
+        for (OrderItem orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+        }
 
         orderRepository.save(order);
 

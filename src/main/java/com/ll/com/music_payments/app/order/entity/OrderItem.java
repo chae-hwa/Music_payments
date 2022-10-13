@@ -42,9 +42,9 @@ public class OrderItem extends BaseEntity {
     public OrderItem(Product product) {
 
         this.product = product;
-        this.price = getSalePrice();
-        this.isPaid = true;
-        this.payDate = LocalDateTime.now();
+        this.price = product.getPrice();
+        this.salePrice = product.getSalePrice();
+        this.wholesalePrice = product.getWholesalePrice();
     }
 
     // 결제 완료 처리
