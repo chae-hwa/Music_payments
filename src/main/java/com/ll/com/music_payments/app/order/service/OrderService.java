@@ -7,12 +7,15 @@ import com.ll.com.music_payments.app.member.entity.Member;
 import com.ll.com.music_payments.app.member.service.MemberService;
 import com.ll.com.music_payments.app.order.entity.Order;
 import com.ll.com.music_payments.app.order.entity.OrderItem;
+import com.ll.com.music_payments.app.order.repository.OrderItemRepository;
 import com.ll.com.music_payments.app.order.repository.OrderRepository;
 import com.ll.com.music_payments.app.product.entity.Product;
+import com.ll.com.music_payments.app.rebate.repository.RebateOrderItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +29,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CartService cartService;
     private final MemberService memberService;
+    private final OrderItemRepository orderItemRepository;
 
     @Transactional
     public Order createFromCart(Member buyer) {
@@ -133,5 +137,10 @@ public class OrderService {
 
     public boolean authorCanPayment(Member author, Order order) {
         return authorCanSee(author, order);
+    }
+
+    public List<OrderItem> findAllByPayDateBetween(LocalDateTime fromDate, LocalDateTime toDate) {
+
+        return orderItemRepository.findAllByPayDateBetween(fromDate,toDate);
     }
 }
