@@ -1,5 +1,6 @@
 package com.ll.com.music_payments.app.base.dto;
 
+import com.ll.com.music_payments.util.Ut;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,5 +36,13 @@ public class RsData<T> {
 
     public boolean isFail() {
         return isSuccess() == false;
+    }
+
+    public String addMsgToUrl(String url) {
+        if ( isFail() ) {
+            return Ut.url.modifyQueryParam(url, "errorMsg", getMsg());
+        }
+
+        return Ut.url.modifyQueryParam(url, "msg", getMsg());
     }
 }
