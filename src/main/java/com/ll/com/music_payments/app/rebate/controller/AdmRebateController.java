@@ -1,5 +1,6 @@
 package com.ll.com.music_payments.app.rebate.controller;
 
+import com.ll.com.music_payments.app.base.dto.RsData;
 import com.ll.com.music_payments.app.rebate.entity.RebateOrderItem;
 import com.ll.com.music_payments.app.rebate.service.RebateService;
 import com.ll.com.music_payments.util.Ut;
@@ -7,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,5 +50,15 @@ public class AdmRebateController {
         model.addAttribute("items", items);
 
         return "adm/rebate/rebateOrderItemList";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/rebateOne/{orderItemId}")
+    @ResponseBody
+    public String rebateOne(@PathVariable long orderItemId) {
+        RsData rebateRsData = rebateService.rebate(orderItemId);
+
+        return rebateRsData.getMsg();
+
     }
 }
