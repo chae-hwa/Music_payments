@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -40,7 +41,6 @@ public class AdmRebateController {
         String redirect = makeDateRsData.addMsgToUrl("redirect:/adm/rebate/rebateOrderItemList?yearMonth=" + yearMonth);
 
         return redirect;
-
     }
 
 
@@ -65,12 +65,32 @@ public class AdmRebateController {
         RsData rebateRsData = rebateService.rebate(orderItemId);
 
         String referer = req.getHeader("Referer");
-        log.debug("referer : " + referer);
         String yearMonth = Ut.url.getQueryParamValue(referer, "yearMonth", "");
 
         String redirect = "redirect:/adm/rebate/rebateOrderItemList?yearMonth=" + yearMonth;
 
         redirect = rebateRsData.addMsgToUrl(redirect);
+
+        return redirect;
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/rebate")
+    public String rebate(String ids, HttpServletRequest req) {
+
+        String[] idsArr = ids.split(",");
+
+        Arrays.stream(idsArr)
+                .mapToLong(Long::parseLong)
+                .forEach(id -> {
+                    rebateService.rebate(id);
+                });
+
+        String referer = req.getHeader("Referer");
+        String yearMonth = Ut.url.getQueryParamValue(referer, "yearMonth", "");
+
+        String redirect = "redirect:/adm/rebate/rebateOrderItemList?yearMonth=" + yearMonth;
+        redirect += "&msg=" + Ut.url.encode("%d건의 정산품목을 정산처리하였습니다.".formatted(idsArr.length));
 
         return redirect;
     }

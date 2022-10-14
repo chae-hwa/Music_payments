@@ -18,7 +18,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Ut {
-
     public static class date {
         public static int getEndDayOf(int year, int month) {
             String yearMonth = year + "-" + "%02d".formatted(month);
@@ -42,9 +41,11 @@ public class Ut {
             return parse("yyyy-MM-dd HH:mm:ss.SSSSSS", dateText);
         }
     }
+
     private static ObjectMapper getObjectMapper() {
         return (ObjectMapper) AppConfig.getContext().getBean("objectMapper");
     }
+
     public static class json {
 
         public static Object toStr(Map<String, Object> map) {
